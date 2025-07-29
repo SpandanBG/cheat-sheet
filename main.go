@@ -15,7 +15,7 @@ func main() {
 
 	fmt.Print("\t1.Two-Pointers")
 	fmt.Println(`
-	(a) K-Sum Problem
+		(a) K-Sum Problem
 		Input:
 			inp: [2, 3, 4, 5, 6],
 			target: 10`)
@@ -27,12 +27,23 @@ func main() {
 	}
 
 	fmt.Println(`
-	(b) Duplicate Number Detection - Floyd's Tortoise and Hare Algo
-	Input:
-		inp: [1, 3, 4, 2, 2]`)
+		(b) Duplicate Number Detection - Floyd's Tortoise and Hare Algo
+		Input:
+			inp: [1, 3, 4, 2, 2]`)
 	if arrays.TwoPointers_CycleDetection([]int{1, 3, 4, 2, 2}) {
 		fmt.Println("\t\tOutput: Is Cyclic")
 	} else {
 		fmt.Println("\t\tOuput: Is NOT Cyclic")
 	}
+
+	fmt.Print("\n\t2.Sliding-Window")
+	fmt.Println(`
+		(a) Size of largest substring of non-repeating characters
+		Inputs: "abcabcbb", "bbbbb", "pwwkew"`)
+	fmt.Println(
+		"\t\tOutputs: ",
+		arrays.SlidingWindow_LongestSubstringWithoutRepeatingChars("abcabcbb"), ",",
+		arrays.SlidingWindow_LongestSubstringWithoutRepeatingChars("bbbbb"), ",",
+		arrays.SlidingWindow_LongestSubstringWithoutRepeatingChars("pwwkew"),
+	)
 }
