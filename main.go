@@ -36,6 +36,12 @@ func main() {
 		fmt.Println("\t\tOuput: Is NOT Cyclic")
 	}
 
+	fmt.Println(`
+		(c) Backspace string compare - 2 sequence comparision
+		Input:
+			inp: "a#b#c#d##e#f", "##f"`)
+	fmt.Println("\t\tOutput: ", arrays.TwoPointers_TwoSequenceComparing("a#b#c#d##e#f", "##f"))
+
 	fmt.Print("\n\t2.Sliding-Window")
 	fmt.Println(`
 		(a) Size of largest substring of non-repeating characters

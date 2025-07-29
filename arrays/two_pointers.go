@@ -1,6 +1,8 @@
 package arrays
 
-import "errors"
+import (
+	"errors"
+)
 
 // TwoPointers_KSum_SortedArray - Takes in a sorted array and finds 2 indices in
 // that array whose value would sum up to match the target value.
@@ -82,4 +84,57 @@ func TwoPointers_CycleDetection(inp []int) bool {
 		}
 	}
 	return false
+}
+
+// TwoPointers_TwoSequenceComparing - Using 2 pointer solve the following:
+//
+// Problem: Backspace String Compare
+// Given two strings s and t, return true if they are equal when both are typed
+// into empty text editors. '#' means a backspace character.
+//
+// Note: After processing, both strings may be empty.
+//
+// Constraints:
+// 1 <= s.length, t.length <= 200
+//
+// s and t only contain lowercase letters and the '#' character.
+//
+// Follow-up:
+// Can you solve it in O(n) time and O(1) space?
+func TwoPointers_TwoSequenceComparing(a, b string) bool {
+	/* Note:
+	Here we will two-pointers to create the final string that would be written
+	into the editor if typed in. The final string will be made individually and
+	then compared at the end
+
+	For the creationg of the string, we will be taking 2 pointers placed at the
+	start of the array (i, j).
+
+	On each iteration (j = j +1):
+		- if `j` is pointing at a `#`: we will move `i` back by 1 step
+		- if `j` is pointing to a non `#`: we will copy `j` to `i` and move `i` by
+		1 step.
+
+	At the end we will have the final string
+	*/
+
+	createStr := func(str string, into chan string) {
+		fStr := make([]rune, len(str))
+		i := 0
+		for _, char := range str {
+			if char == '#' {
+				i = max(i-1, 0)
+			} else {
+				fStr[i] = char
+				i += 1
+			}
+		}
+		into <- string(fStr[:i])
+	}
+
+	ax, bx := make(chan string), make(chan string)
+	go createStr(a, ax)
+	go createStr(b, bx)
+
+	return <-ax == <-bx
 }
