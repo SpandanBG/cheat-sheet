@@ -103,38 +103,57 @@ func TwoPointers_CycleDetection(inp []int) bool {
 // Can you solve it in O(n) time and O(1) space?
 func TwoPointers_TwoSequenceComparing(a, b string) bool {
 	/* Note:
-	Here we will two-pointers to create the final string that would be written
-	into the editor if typed in. The final string will be made individually and
-	then compared at the end
+	Here we start from back of both the strings. This is because the characters
+	encountered will be confirmed parts of the string.
 
-	For the creationg of the string, we will be taking 2 pointers placed at the
-	start of the array (i, j).
-
-	On each iteration (j = j +1):
-		- if `j` is pointing at a `#`: we will move `i` back by 1 step
-		- if `j` is pointing to a non `#`: we will copy `j` to `i` and move `i` by
-		1 step.
-
-	At the end we will have the final string
+	In each iteration we will move backwards 1 step and do the following:
+		- if `#` is seen: increment a `skip` counter
+		- if `skip > 0`: decrement `skip` by 1
+		- else compare a[i] == b[j]
 	*/
 
-	createStr := func(str string, into chan string) {
-		fStr := make([]rune, len(str))
-		i := 0
-		for _, char := range str {
-			if char == '#' {
-				i = max(i-1, 0)
-			} else {
-				fStr[i] = char
-				i += 1
+	findNext := func(str string, from int) (int, rune) {
+		var char rune
+		skip := 0
+
+		for from >= 0 {
+			for from >= 0 {
+				char = []rune(str)[from]
+				if char == '#' {
+					skip += 1
+					from -= 1
+					continue
+				}
+				break
 			}
+
+			if skip > 0 {
+				skip -= 1
+				from -= 1
+				continue
+			}
+
+			break
 		}
-		into <- string(fStr[:i])
+
+		char = rune(0)
+		if from >= 0 {
+			char = []rune(str)[from]
+		}
+
+		return from - 1, char
 	}
 
-	ax, bx := make(chan string), make(chan string)
-	go createStr(a, ax)
-	go createStr(b, bx)
+	i, j := len(a)-1, len(b)-1
+	var ax, bx rune
+	for i >= 0 || j >= 0 {
+		i, ax = findNext(a, i)
+		j, bx = findNext(b, j)
 
-	return <-ax == <-bx
+		if ax != bx {
+			return false
+		}
+	}
+
+	return true
 }
