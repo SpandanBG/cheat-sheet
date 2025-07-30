@@ -54,7 +54,7 @@ func main() {
 	)
 
 	fmt.Println("\n\t3.Binary Search")
-	fmt.Print("\t\t(a) Median of 2 sorted arrays")
+	fmt.Println("\t\t(a) Median of 2 sorted arrays")
 	fmt.Println(
 		"\t\tInputs:\n\t\t\ta = [1, 3]\n\t\t\tb = [2]",
 		"\n\t\tOutput:",

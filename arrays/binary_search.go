@@ -1,6 +1,8 @@
 package arrays
 
-import "math"
+import (
+	"math"
+)
 
 // BinarySearch_MedianOfTwoArrays - Given 2 sorted arrays this method needs to
 // find the median of the 2 sorted array such that if the 2 arrays were merged
@@ -62,90 +64,70 @@ func BinarySearch_MedianOfTwoArrays(a, b []int) float64 {
 		mid of a to the right (low = mid)
 	*/
 
-	// Move a and b to l (larger) and s(smaller)
-	l, s := a, b
-	if len(l) < len(s) {
-		l, s = b, a
+	// Array A is empty edge case
+	if len(a) == 0 {
+		m := len(b) / 2
+		if len(b)%2 != 0 {
+			return float64(b[m])
+		}
+		return (float64(b[m-1]) + float64(b[m])) / 2
 	}
 
-	// set low and high
-	low, high := 0, len(s)-1
+	// Array B is empty edge case
+	if len(b) == 0 {
+		m := len(a) / 2
+		if len(a)%2 != 0 {
+			return float64(a[m])
+		}
+		return (float64(a[m-1]) + float64(a[m])) / 2
+	}
 
-	// total size
+	s, l := a, b
+	if len(s) > len(l) {
+		s, l = b, a
+	}
+
 	ts := len(s) + len(l)
+	low, high, i, j := 0, len(s)-1, 0, 0
 
-	// length adjustment modifier
-	tsm := 1
-	if ts%2 != 0 {
-		tsm = 0
-	}
-
-	// initial mid of smaller
-	i := low + (high-low)/2
-
-	// initial mid of smaller
-	j := (ts-tsm)/2 - i // here we do `- i` cause it's same as `- len(s[:i])`
-
-	// max and min of large
+	sL_max, sR_min := math.MaxInt, math.MinInt
 	lL_max, lR_min := math.MaxInt, math.MinInt
 
-	// max and min of small
-	sL_max, sR_min := math.MaxInt, math.MinInt
-
-	for sR_min < lL_max || sL_max > lR_min {
-		lL_max = math.MinInt
-		lR_min = math.MaxInt
-		if j > 0 && j < len(l) {
-			lL_max = l[j-1]
-			lR_min = l[j]
-		}
+	for sL_max > lR_min || lL_max > sR_min {
+		i = low + (high-low)/2
+		j = ts/2 - i
 
 		sL_max = math.MinInt
-		sR_min = math.MaxInt
-		if i > 0 && i < len(s) {
+		if i-1 >= 0 && i-1 < len(s) {
 			sL_max = s[i-1]
+		}
+		sR_min = math.MaxInt
+		if i >= 0 && i < len(s) {
 			sR_min = s[i]
 		}
 
-		if sR_min < lL_max {
-			low = i
-		} else if sL_max > lR_min {
-			high = i - 1
-		}
-
-		if low == 0 && high == 0 {
-			i = -1
-			break
-		}
-
-		if low == high {
-			i = len(s)
-			break
-		}
-
-		i = low + int(math.Ceil(float64(high-low)/2))
-		j = (ts-tsm)/2 - i
-	}
-
-	if i == len(s) {
-		sL_max = s[len(s)-1]
-		sR_min = math.MaxInt
-
 		lL_max = math.MinInt
-		lR_min = l[0]
-	}
-
-	if i == -1 {
-		sL_max = math.MinInt
-		sR_min = s[0]
-
-		lL_max = l[len(l)-1]
+		if j-1 >= 0 && j-1 < len(l) {
+			lL_max = l[j-1]
+		}
 		lR_min = math.MaxInt
+		if j >= 0 && j < len(l) {
+			lR_min = l[j]
+		}
+
+		if sL_max <= lR_min && lL_max <= sR_min {
+			break
+		}
+
+		if sL_max > lR_min {
+			high = i - 1
+		} else {
+			low = i + 1
+		}
 	}
 
 	if ts%2 == 0 {
-		return (float64(max(lL_max, sL_max)) + float64(min(sR_min, lR_min))) / 2
+		return float64(max(sL_max, lL_max)+min(sR_min, lR_min)) / 2
 	}
-
 	return float64(min(sR_min, lR_min))
 }
