@@ -52,4 +52,39 @@ func main() {
 		arrays.SlidingWindow_LongestSubstringWithoutRepeatingChars("bbbbb"), ",",
 		arrays.SlidingWindow_LongestSubstringWithoutRepeatingChars("pwwkew"),
 	)
+
+	fmt.Println("\n\t3.Binary Search")
+	fmt.Print("\t\t(a) Median of 2 sorted arrays")
+	fmt.Println(
+		"\t\tInputs:\n\t\t\ta = [1, 3]\n\t\t\tb = [2]",
+		"\n\t\tOutput:",
+		arrays.BinarySearch_MedianOfTwoArrays(
+			[]int{1, 3},
+			[]int{2},
+		), "== 2",
+	)
+	fmt.Println(
+		"\t\tInputs:\n\t\t\ta = [1, 2]\n\t\t\tb = [3, 4]",
+		"\n\t\tOutput:",
+		arrays.BinarySearch_MedianOfTwoArrays(
+			[]int{1, 2},
+			[]int{3, 4},
+		), "== 2.5",
+	)
+	fmt.Println(
+		"\t\tInputs:\n\t\t\ta = [1, 2, 3, 4, 5]\n\t\t\tb = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]",
+		"\n\t\tOutput:",
+		arrays.BinarySearch_MedianOfTwoArrays(
+			[]int{1, 2, 3, 4, 5},
+			[]int{6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17},
+		), "== 9",
+	)
+	fmt.Println(
+		"\t\tInputs:\n\t\t\ta = [1, 2, 3]\n\t\t\tb = [4, 5, 6]",
+		"\n\t\tOutput:",
+		arrays.BinarySearch_MedianOfTwoArrays(
+			[]int{1, 2, 3},
+			[]int{4, 5, 6},
+		), "== 3.5",
+	)
 }
