@@ -159,3 +159,54 @@ func MinHeap_KthLargest(nums []int, k int) int {
 
 	return heap.Pop(&p).(int)
 }
+
+func QuickSelect_KthLargest(nums []int, k int) int {
+	/* Note
+	Here we chose the kth element from the end as our pivot.
+	With that picked, we create 2 sides:
+		- LHS => all elements are smaller than our pivot
+		- RHS => all elements are larger than our pivot
+
+	Now if, our RHS's length is == (k-1); then our pivot is exactly Kth largest
+	and we must return it.
+
+	If RHS's length is greater than or equal to k, we do a quick select on RHS
+	for k'th largest again
+
+	Now, if RHS's length is less than `k`, then it means our required value is in
+	LHS at some postion `n`, which can be calculated as
+			`n = k - len(rhs) - 1`
+	where:
+		- We find out how many elements we have already dimmed bigger (len(rhs))
+		- We then remove that many number of elements from `k` (k - len(rhs))
+		- We then also remove the pivot since it wasn't the element we were looking
+		for (k - len(rhs) - 1)
+	*/
+
+	x := len(nums) - k
+	pivot := nums[x]
+	lhs, rhs := []int{}, []int{}
+
+	for i, v := range nums {
+		if i == x {
+			continue // we ignore our pivot
+		}
+
+		if v <= pivot {
+			lhs = append(lhs, v)
+		} else {
+			rhs = append(rhs, v)
+		}
+	}
+
+	if len(rhs) == k-1 {
+		return pivot
+	}
+
+	if len(rhs) < k {
+		n := k - len(rhs) - 1
+		return QuickSelect_KthLargest(lhs, n)
+	}
+
+	return QuickSelect_KthLargest(rhs, k)
+}

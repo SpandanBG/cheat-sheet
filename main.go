@@ -103,4 +103,10 @@ func main() {
 		arrays.MinHeap_KthLargest([]int{3, 2, 1, 5, 6, 4}, 2),
 	)
 
+	fmt.Println("\n\t\t(c) Kth Largest (Quick Select)")
+	fmt.Println(
+		"\t\tInputs: nums=[3,2,1,5,6,4], k=2",
+		"\n\t\tOutput:",
+		arrays.QuickSelect_KthLargest([]int{3, 2, 1, 5, 6, 4}, 2),
+	)
 }
