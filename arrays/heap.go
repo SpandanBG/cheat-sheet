@@ -28,7 +28,7 @@ import "container/heap"
 //
 // Input: nums = [1], k = 1
 // Output: [1]
-func MaxHeap_SlidingWindowMax(nums []int, k int) []int {
+func PriorityQueue_SlidingWindowMax(nums []int, k int) []int {
 	/*Note
 	We are going to create a priority queue where we will only keep the index of
 	the largest number at any given point of the sliding window.
