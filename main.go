@@ -88,22 +88,29 @@ func main() {
 		), "== 3.5",
 	)
 
-	fmt.Println("\n\t4.Heap")
-	fmt.Println("\t\t(a) Sliding Window with Max Heap")
+	fmt.Println("\n\t4.Heap | Priority Queue | Quickselect")
+	fmt.Println("\t\t(a) Max in Sliding Window with Max Heap")
+	fmt.Println(
+		"\t\tInputs: nums=[1, 3, -1, -3, 5, 3, 6, 7], k=3",
+		"\n\t\tOutput:",
+		arrays.MaxHeap_SlidingWindowMax([]int{1, 3, -1, -3, 5, 3, 6, 7}, 3),
+	)
+
+	fmt.Println("\n\t\t(b) Max in Sliding Window with Priority Queue")
 	fmt.Println(
 		"\t\tInputs: nums=[1, 3, -1, -3, 5, 3, 6, 7], k=3",
 		"\n\t\tOutput:",
 		arrays.PriorityQueue_SlidingWindowMax([]int{1, 3, -1, -3, 5, 3, 6, 7}, 3),
 	)
 
-	fmt.Println("\n\t\t(b) Kth Largest (Min Heap)")
+	fmt.Println("\n\t\t(c) Kth Largest (Min Heap)")
 	fmt.Println(
 		"\t\tInputs: nums=[3,2,1,5,6,4], k=2",
 		"\n\t\tOutput:",
 		arrays.MinHeap_KthLargest([]int{3, 2, 1, 5, 6, 4}, 2),
 	)
 
-	fmt.Println("\n\t\t(c) Kth Largest (Quick Select)")
+	fmt.Println("\n\t\t(d) Kth Largest (Quick Select)")
 	fmt.Println(
 		"\t\tInputs: nums=[3,2,1,5,6,4], k=2",
 		"\n\t\tOutput:",
