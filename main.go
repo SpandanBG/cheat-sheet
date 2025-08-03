@@ -95,4 +95,12 @@ func main() {
 		"\n\t\tOutput:",
 		arrays.MaxHeap_SlidingWindowMax([]int{1, 3, -1, -3, 5, 3, 6, 7}, 3),
 	)
+
+	fmt.Println("\n\t\t(b) Kth Largest (Min Heap)")
+	fmt.Println(
+		"\t\tInputs: nums=[3,2,1,5,6,4], k=2",
+		"\n\t\tOutput:",
+		arrays.MinHeap_KthLargest([]int{3, 2, 1, 5, 6, 4}, 2),
+	)
+
 }

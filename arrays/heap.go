@@ -1,5 +1,7 @@
 package arrays
 
+import "container/heap"
+
 // You are given an array of integers nums, there is a sliding window of size k
 // which is moving from the very left of the array to the very right. You can only
 // see the k numbers in the window. Each time the sliding window moves right by one
@@ -86,4 +88,74 @@ func MaxHeap_SlidingWindowMax(nums []int, k int) []int {
 	}
 
 	return ans
+}
+
+// ----------------------------------------------------------------------------
+
+type pq []int
+
+func (p pq) Len() int {
+	return len(p)
+}
+
+func (p pq) Swap(i, j int) {
+	p[i], p[j] = p[j], p[i]
+}
+
+func (p pq) Less(i, j int) bool {
+	return p[i] < p[j] // check for creating min heap
+}
+
+func (p *pq) Push(x any) {
+	switch y := x.(type) {
+	case int:
+		*p = append(*p, y)
+	default:
+		return
+	}
+}
+
+// Takes out the last element which should have the min number
+func (p *pq) Pop() any {
+	if len(*p) == 0 {
+		return nil
+	}
+
+	last := (*p)[len(*p)-1]
+	if p.Len() > 0 {
+		*p = (*p)[:len(*p)-1]
+	} else {
+		*p = make(pq, 0)
+	}
+
+	return last
+}
+
+// Given an integer array nums and an integer k, return the kth largest element
+// in the array.
+//
+// Note that it is the kth largest element in the sorted order, not the kth
+// distinct element.
+//
+// Can you solve it without sorting?
+//
+// Example 1:
+//
+// Input: nums = [3,2,1,5,6,4], k = 2
+// Output: 5
+// Example 2:
+//
+// Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+// Output: 4
+func MinHeap_KthLargest(nums []int, k int) int {
+	p := pq{}
+
+	for _, value := range nums {
+		heap.Push(&p, value)
+		if p.Len() > k {
+			_ = heap.Pop(&p)
+		}
+	}
+
+	return heap.Pop(&p).(int)
 }
