@@ -231,10 +231,14 @@ func MinHeap_KthLargest(nums []int, k int) int {
 	p := pq{}
 
 	for _, value := range nums {
-		heap.Push(&p, value)
-		if p.Len() > k {
-			_ = heap.Pop(&p)
+		if p.Len() >= k {
+			if p[0] < value {
+				p[0] = value
+				heap.Fix(&p, 0)
+			}
+			continue
 		}
+		heap.Push(&p, value)
 	}
 
 	return heap.Pop(&p).(int)
