@@ -87,4 +87,12 @@ func main() {
 			[]int{4, 5, 6},
 		), "== 3.5",
 	)
+
+	fmt.Println("\n\t4.Heap")
+	fmt.Println("\t\t(a) Sliding Window with Max Heap")
+	fmt.Println(
+		"\t\tInputs: nums=[1, 3, -1, -3, 5, 3, 6, 7], k=3",
+		"\n\t\tOutput:",
+		arrays.MaxHeap_SlidingWindowMax([]int{1, 3, -1, -3, 5, 3, 6, 7}, 3),
+	)
 }
