@@ -407,8 +407,12 @@ func BFS_ShortestPathAllNodes(graph [][]int) int {
 		visitedMap int // bitmask of visited so far
 	}
 
-	// {bitmap: *node}
-	memo := map[int]*node{}
+	// For each node, it will have only a set of masks that it can visit without
+	// repeating. As such, we will create a matrix of [node-index][masks]
+	seen := make([][]bool, len(graph))
+	for i := 0; i < len(graph); i += 1 {
+		seen[i] = make([]bool, 1<<len(graph))
+	}
 
 	que := []*node{}
 
@@ -435,7 +439,7 @@ func BFS_ShortestPathAllNodes(graph [][]int) int {
 			depth:      0,
 			visitedMap: 1 << i,
 		}
-		memo[n.visitedMap] = n
+		seen[i][1<<i] = true
 		eque(n)
 	}
 
@@ -444,8 +448,6 @@ func BFS_ShortestPathAllNodes(graph [][]int) int {
 		if n == nil {
 			break
 		}
-
-		delete(memo, n.visitedMap)
 
 		if n.visitedMap == allVisitedMap {
 			return n.depth
@@ -457,17 +459,17 @@ func BFS_ShortestPathAllNodes(graph [][]int) int {
 				return n.depth + 1
 			}
 
+			if seen[x][xn_bitmap] {
+				continue
+			}
+
 			xn := &node{
 				pos:        x,
 				depth:      n.depth + 1,
 				visitedMap: xn_bitmap,
 			}
 
-			if mn, ok := memo[xn.visitedMap]; ok && mn.depth < xn.depth {
-				continue
-			}
-
-			memo[xn.visitedMap] = xn
+			seen[x][xn_bitmap] = true
 			eque(xn)
 		}
 	}
