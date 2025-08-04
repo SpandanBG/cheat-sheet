@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"sudocoding.xyz/cheat-sheet/arrays"
+	"sudocoding.xyz/cheat-sheet/graphs"
 )
 
 func main() {
@@ -116,4 +117,16 @@ func main() {
 		"\n\t\tOutput:",
 		arrays.QuickSelect_KthLargest([]int{3, 2, 1, 5, 6, 4}, 2),
 	)
+
+	fmt.Println("--------------------------------------------------------------")
+
+	fmt.Println("Graphs")
+	fmt.Println("----------------")
+
+	fmt.Print("\t1. Breadth-First-Search")
+	fmt.Println(`
+		(a) Shortest Path - Sliding Puzzle
+		Input:
+			board: {{3, 2, 4}, {1, 5, 0}}`)
+	fmt.Println("\t\tOutput:", graphs.BFS_SlidingPuzzle([][]int{{3, 2, 4}, {1, 5, 0}}))
 }
