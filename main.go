@@ -125,9 +125,16 @@ func main() {
 
 	fmt.Print("\t1. Breadth-First-Search")
 	fmt.Println(`
-		(a) Shortest Path - Sliding Puzzle
+		(a) Minimum Steps - Sliding Puzzle
 		Input:
-			board: {{3, 2, 4}, {1, 5, 0}}`)
+			board: [[3, 2, 4 , [1, 5, 0]]`)
 	fmt.Println("\t\tPlain BFS Output:", graphs.BFS_SlidingPuzzle([][]int{{3, 2, 4}, {1, 5, 0}}))
 	fmt.Println("\t\tBi-Directional BFS Output:", graphs.BiDirBFS_SlidingPuzzle([][]int{{3, 2, 4}, {1, 5, 0}}))
+
+	fmt.Println(`
+		(b) Shortest Path Visiting all nodes - Sliding Puzzle
+		Input:
+			board: [[1,2,3],[0],[0],[0]]`)
+	fmt.Println("\t\tOutput:", graphs.BFS_ShortestPathAllNodes([][]int{{1, 2, 3}, {0}, {0}, {0}}))
+	fmt.Println("\t\tOutput:", graphs.BFS_ShortestPathAllNodes([][]int{{7}, {3}, {3, 9}, {1, 2, 4, 5, 7, 11}, {3}, {3}, {9}, {3, 10, 8, 0}, {7}, {11, 6, 2}, {7}, {3, 9}}))
 }

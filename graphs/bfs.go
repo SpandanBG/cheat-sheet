@@ -350,3 +350,127 @@ func BiDirBFS_SlidingPuzzle(board [][]int) int {
 
 	return -1
 }
+
+// You have an undirected, connected graph of n nodes labeled from 0 to n - 1.
+// You are given an array graph where graph[i] is a list of all the nodes
+// connected with node i by an edge.
+//
+// Return the length of the shortest path that visits every node. You may start
+// and stop at any node, you may revisit nodes multiple times, and you may reuse
+// edges.
+//
+// Example 1:
+//
+//	Input: graph = [[1,2,3],[0],[0],[0]]
+//	Output: 4
+//	Explanation: One possible path is [1,0,2,0,3]
+//
+// Example 2:
+//
+//	Input: graph = [[1],[0,2,4],[1,3,4],[2],[1,2]]
+//	Output: 4
+//	Explanation: One possible path is [0,1,4,2,3]
+//
+// Constraints:
+//
+//	n == graph.length
+//	1 <= n <= 12
+//	0 <= graph[i].length < n
+//	graph[i] does not contain i.
+//	If graph[a] contains b, then graph[b] contains a.
+//	The input graph is always connected.
+func BFS_ShortestPathAllNodes(graph [][]int) int {
+	/* Notes:
+
+	Here we will do a BFS run and at node of the BFS we will store the bitmap of
+	all visited node.
+
+	If at any point, the bitmap created matches the all visited bitmap we have
+	finished out pathing and we can return out depth as the steps requried.
+
+	We define the bitmap as such:
+		- all visited map = ~( (~0) << n)
+			- (~0) = turns all of the 0000 > 1111
+			- << n = left shifts n times. eg: << 2 -> 1111 > 1100
+			- ~((~0) << n) = flips bits again. eg: 1100 -> 0011
+		- at a visit of a node: current_map | (1 << n) where n is the newly visited
+			- say current_map = 0001 (0th node visited)
+			- the next visited is 1th node = 1 << 1 = 0001 << 1 = 0010 (new_visit_mask)
+			- updated map = current_map | new_visit_mask = 0001 | 0010 = 0011
+	*/
+
+	allVisitedMap := ^(^0 << len(graph)) // think about it, you will figure it out
+
+	type node struct {
+		pos        int // id of the node
+		depth      int // depth into the BFS
+		visitedMap int // bitmask of visited so far
+	}
+
+	// {bitmap: *node}
+	memo := map[int]*node{}
+
+	que := []*node{}
+
+	eque := func(n *node) {
+		que = append(que, n)
+	}
+
+	dque := func() *node {
+		if len(que) == 0 {
+			return nil
+		}
+		first := que[0]
+		if len(que) > 1 {
+			que = que[1:]
+		} else {
+			que = []*node{}
+		}
+		return first
+	}
+
+	for i := 0; i < len(graph); i += 1 {
+		n := &node{
+			pos:        i,
+			depth:      0,
+			visitedMap: 1 << i,
+		}
+		memo[n.visitedMap] = n
+		eque(n)
+	}
+
+	for len(que) > 0 {
+		n := dque()
+		if n == nil {
+			break
+		}
+
+		delete(memo, n.visitedMap)
+
+		if n.visitedMap == allVisitedMap {
+			return n.depth
+		}
+
+		for _, x := range graph[n.pos] {
+			xn_bitmap := n.visitedMap | (1 << x)
+			if xn_bitmap == allVisitedMap {
+				return n.depth + 1
+			}
+
+			xn := &node{
+				pos:        x,
+				depth:      n.depth + 1,
+				visitedMap: xn_bitmap,
+			}
+
+			if mn, ok := memo[xn.visitedMap]; ok && mn.depth < xn.depth {
+				continue
+			}
+
+			memo[xn.visitedMap] = xn
+			eque(xn)
+		}
+	}
+
+	return -1
+}
