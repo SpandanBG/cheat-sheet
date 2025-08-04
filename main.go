@@ -128,5 +128,6 @@ func main() {
 		(a) Shortest Path - Sliding Puzzle
 		Input:
 			board: {{3, 2, 4}, {1, 5, 0}}`)
-	fmt.Println("\t\tOutput:", graphs.BFS_SlidingPuzzle([][]int{{3, 2, 4}, {1, 5, 0}}))
+	fmt.Println("\t\tPlain BFS Output:", graphs.BFS_SlidingPuzzle([][]int{{3, 2, 4}, {1, 5, 0}}))
+	fmt.Println("\t\tBi-Directional BFS Output:", graphs.BiDirBFS_SlidingPuzzle([][]int{{3, 2, 4}, {1, 5, 0}}))
 }
