@@ -137,4 +137,19 @@ func main() {
 			board: [[1,2,3],[0],[0],[0]]`)
 	fmt.Println("\t\tOutput:", graphs.BFS_ShortestPathAllNodes([][]int{{1, 2, 3}, {0}, {0}, {0}}))
 	fmt.Println("\t\tOutput:", graphs.BFS_ShortestPathAllNodes([][]int{{7}, {3}, {3, 9}, {1, 2, 4, 5, 7, 11}, {3}, {3}, {9}, {3, 10, 8, 0}, {7}, {11, 6, 2}, {7}, {3, 9}}))
+
+	fmt.Print("\t2. Dijkstra's")
+	fmt.Println(`
+		(a) Cheapest Flights Within K Stops 
+		Input:
+			n = 4, 
+			flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], 
+			src = 0, dst = 3, k = 1`)
+	// fmt.Println("\t\tOutput:", graphs.Dijkstra_CheapestFlightWithinKStops(4, [][]int{{0, 1, 100}, {1, 2, 100}, {2, 0, 100}, {1, 3, 600}, {2, 3, 200}}, 0, 3, 1))
+	// fmt.Println("\t\tOutput:", graphs.Dijkstra_CheapestFlightWithinKStops(4, [][]int{{0, 1, 1}, {0, 2, 5}, {1, 2, 1}, {2, 3, 1}}, 0, 3, 1))
+
+	fmt.Println("\t\tOutput:", graphs.Dijkstra_CheapestFlightWithinKStops(5, [][]int{{0, 1, 5}, {1, 2, 5}, {0, 3, 2}, {3, 1, 2}, {1, 4, 1}, {4, 2, 1}}, 0, 2, 2))
+
+	// fmt.Println("\t\tOutput:", graphs.Dijkstra_CheapestFlightWithinKStops(3, [][]int{{0, 1, 100}, {1, 2, 100}, {0, 2, 500}}, 0, 2, 1))
+	// fmt.Println("\t\tOutput:", graphs.Dijkstra_CheapestFlightWithinKStops(10, [][]int{{3, 4, 4}, {2, 5, 6}, {4, 7, 10}, {9, 6, 5}, {7, 4, 4}, {6, 2, 10}, {6, 8, 6}, {7, 9, 4}, {1, 5, 4}, {1, 0, 4}, {9, 7, 3}, {7, 0, 5}, {6, 5, 8}, {1, 7, 6}, {4, 0, 9}, {5, 9, 1}, {8, 7, 3}, {1, 2, 6}, {4, 1, 5}, {5, 2, 4}, {1, 9, 1}, {7, 8, 10}, {0, 4, 2}, {7, 2, 8}}, 6, 0, 7))
 }
