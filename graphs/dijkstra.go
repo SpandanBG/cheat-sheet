@@ -1,7 +1,6 @@
 package graphs
 
 import (
-	"fmt"
 	"math/big"
 )
 
@@ -151,12 +150,6 @@ func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int
 		dict[flight[from_i]] = data
 	}
 
-	fmt.Println("{")
-	for key, value := range dict {
-		fmt.Println("\t", key, ":", value, ",")
-	}
-	fmt.Println("}\n--")
-
 	// to store the lowest travel cost
 	var marked *Item
 
@@ -165,13 +158,7 @@ func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int
 	memo := map[string]*Item{}
 
 	for len(*srcHeap) > 0 {
-		for _, each := range *srcHeap {
-			fmt.Print("{", each.id, " ", each.depth, " ", each.priority, "} | ")
-		}
-		fmt.Println()
-
 		sNode := srcHeap.Pop()
-
 		if sNode == nil {
 			break
 		}
