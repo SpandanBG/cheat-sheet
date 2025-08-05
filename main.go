@@ -138,7 +138,7 @@ func main() {
 	fmt.Println("\t\tOutput:", graphs.BFS_ShortestPathAllNodes([][]int{{1, 2, 3}, {0}, {0}, {0}}))
 	fmt.Println("\t\tOutput:", graphs.BFS_ShortestPathAllNodes([][]int{{7}, {3}, {3, 9}, {1, 2, 4, 5, 7, 11}, {3}, {3}, {9}, {3, 10, 8, 0}, {7}, {11, 6, 2}, {7}, {3, 9}}))
 
-	fmt.Print("\t2. Dijkstra's")
+	fmt.Print("\n\t2. Dijkstra's")
 	fmt.Println(`
 		(a) Cheapest Flights Within K Stops 
 		Input:
@@ -146,4 +146,13 @@ func main() {
 			flights = [[0,1,100],[1,2,100],[2,0,100],[1,3,600],[2,3,200]], 
 			src = 0, dst = 3, k = 1`)
 	fmt.Println("\t\tOutput:", graphs.Dijkstra_CheapestFlightWithinKStops(4, [][]int{{0, 1, 100}, {1, 2, 100}, {2, 0, 100}, {1, 3, 600}, {2, 3, 200}}, 0, 3, 1))
+
+	fmt.Print("\n\t3. Bellman Ford's")
+	fmt.Println(`
+		(a) Cheapest Flights Within K Stops 
+		Input:
+			n = 5, 
+			flights = {{1,0,5},{2,1,5},{3,0,2},{1,3,2},{4,1,1},{2,4,1}}, 
+			src = 2, dst = 0, k = 2`)
+	fmt.Println("\t\tOutput:", graphs.BellmanFord_CheapestFlightWithinKStops(5, [][]int{{1, 0, 5}, {2, 1, 5}, {3, 0, 2}, {1, 3, 2}, {4, 1, 1}, {2, 4, 1}}, 2, 0, 2))
 }
