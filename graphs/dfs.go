@@ -122,3 +122,54 @@ func DFS_NumberOfIslands(grid [][]byte) int {
 
 	return islands
 }
+
+// Given a directed acyclic graph (DAG) of n nodes labeled from 0 to n - 1,
+// find all possible paths from node 0 to node n - 1 and return them in any order.
+//
+// The graph is given as follows: graph[i] is a list of all nodes you can visit
+// from node i (i.e., there is a directed edge from node i to node graph[i][j])
+//
+// Example 1
+//
+//	Input: graph = [[1,2],[3],[3],[]]
+//	Output: [[0,1,3],[0,2,3]]
+//	Explanation: There are two paths: 0 -> 1 -> 3 and 0 -> 2 -> 3.
+//
+// Constraints:
+//
+//	n == graph.length
+//	2 <= n <= 15
+//	0 <= graph[i][j] < n
+//	graph[i][j] != i (i.e., there will be no self-loops).
+//	All the elements of graph[i] are unique.
+//	The input graph is guaranteed to be a DAG.
+func DSF_allPathsSourceTarget(graph [][]int) [][]int {
+	walks := [][]int{{0}}
+	walk_allPath(&graph, &walks, 0, 0)
+	return walks
+}
+
+func walk_allPath(graph *[][]int, ans *[][]int, set_i, node int) {
+	if node == len(*graph)-1 {
+		return
+	}
+
+	frozen := make([]int, len((*ans)[set_i]))
+	copy(frozen, (*ans)[set_i])
+
+	for i, other := range (*graph)[node] {
+		if i > 0 {
+			*ans = append(*ans, make([]int, len(frozen)))
+			copy((*ans)[len(*ans)-1], frozen)
+		}
+		(*ans)[len(*ans)-1] = append((*ans)[len(*ans)-1], other)
+		walk_allPath(graph, ans, len(*ans)-1, other)
+
+		last := (*ans)[len(*ans)-1]
+		if last[len(last)-1] != len(*graph)-1 {
+			(*ans) = (*ans)[:len(*ans)-1]
+		}
+	}
+
+	return
+}

@@ -166,4 +166,10 @@ func main() {
 				["0","0","0","0","0"]
 			]`)
 	fmt.Println("\t\tOutput:", graphs.DFS_NumberOfIslands([][]byte{{1, 1, 1, 1, 0}, {1, 1, 0, 1, 0}, {1, 1, 0, 0, 0}, {0, 0, 0, 0, 0}}))
+
+	fmt.Println(`
+		(b) All Paths From Source to Target
+		Input: graph = [[4,3,1],[3,2,4],[],[4],[]]`)
+	fmt.Println("\t\tOutput:", graphs.DSF_allPathsSourceTarget([][]int{{4, 3, 1}, {3, 2, 4}, {}, {4}, {}}))
+
 }
