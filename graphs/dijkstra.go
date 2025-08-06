@@ -143,21 +143,21 @@ func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int
 
 	// memory for edge relaxation
 	dist := make([][]int, n)
-	dist_alt := make([][]int, n)
 	for i := range n {
-		// if k stops can be made, then k+1steps can be taken
+		// if k stops can be made, then k+1 stops can be taken
+		// so we make k+2 slots to store cost for each number of steps taken
+		// 0th index -> no steps taken cost, and so on
+		// If k=2, total stops that can be made is k+1 = 3, therefore we need k+2
+		// slots to save cost of each step
 		dist[i] = make([]int, k+2)
-		dist_alt[i] = make([]int, k+2)
 
 		for j := range dist[i] {
 			dist[i][j] = math.MaxInt
-			dist_alt[i][j] = math.MaxInt
 		}
 	}
 
 	// Set distance cost from source to source at 0th step as 0
 	dist[src][0] = 0
-	dist_alt[src][0] = 0
 
 	// push source to pq
 	pq.Push(&Item{
@@ -167,12 +167,9 @@ func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int
 	})
 
 	// move flights array to map
-	fMap := map[int8][][]int{}
+	fMap := make([][][2]int, n)
 	for _, flight := range flights {
-		if _, ok := fMap[int8(flight[0])]; !ok {
-			fMap[int8(flight[0])] = make([][]int, 0)
-		}
-		fMap[int8(flight[0])] = append(fMap[int8(flight[0])], []int{flight[1], flight[2]})
+		fMap[flight[0]] = append(fMap[flight[0]], [2]int{flight[1], flight[2]})
 	}
 
 	// Perfrom Dijkstra's
@@ -209,13 +206,13 @@ func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int
 			// get the distance cost of next city from source city
 			dist_v := dist[nCity][nDepth]
 
-			if dist_v != math.MaxInt16 && dist_v < nPriority {
+			if dist_v != math.MaxInt16 && dist_v <= nPriority {
 				// this city has been visted from the source previously and the cost
 				// was cheaper -> we skip entering here
 				continue
 			}
 
-			dist_alt[nCity][nDepth] = nPriority
+			dist[nCity][nDepth] = nPriority
 
 			pq.Push(&Item{
 				city:     nCity,
@@ -223,10 +220,6 @@ func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int
 				priority: nPriority,
 			})
 			continue
-		}
-
-		for i := range dist_alt {
-			copy(dist[i], dist_alt[i])
 		}
 	}
 
