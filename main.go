@@ -155,4 +155,15 @@ func main() {
 			flights = {{1,0,5},{2,1,5},{3,0,2},{1,3,2},{4,1,1},{2,4,1}}, 
 			src = 2, dst = 0, k = 2`)
 	fmt.Println("\t\tOutput:", graphs.BellmanFord_CheapestFlightWithinKStops(5, [][]int{{1, 0, 5}, {2, 1, 5}, {3, 0, 2}, {1, 3, 2}, {4, 1, 1}, {2, 4, 1}}, 2, 0, 2))
+
+	fmt.Print("\n\t4. Depth-First Search")
+	fmt.Println(`
+		(a) Number Of Islands
+		Input: grid = [
+				["1","1","1","1","0"],
+				["1","1","0","1","0"],
+				["1","1","0","0","0"],
+				["0","0","0","0","0"]
+			]`)
+	fmt.Println("\t\tOutput:", graphs.DFS_NumberOfIslands([][]byte{{1, 1, 1, 1, 0}, {1, 1, 0, 1, 0}, {1, 1, 0, 0, 0}, {0, 0, 0, 0, 0}}))
 }
