@@ -1,13 +1,12 @@
 package graphs
 
 import (
-	"math/big"
+	"math"
 )
 
 type Item struct {
-	id       big.Int
-	city     int
-	depth    int
+	city     int8
+	depth    int8
 	priority int
 }
 
@@ -71,7 +70,7 @@ func (m *MinHeap) down(i int) {
 
 	for j < len(*m) {
 		// check if right is smaller than left
-		if j2 := j + 1; j2 < len(*m) && m.Less(j2, 1) {
+		if j2 := j + 1; j2 < len(*m) && m.Less(j2, j) {
 			j = j2 // pick the smallest to move to top
 		}
 
@@ -120,93 +119,126 @@ func (m *MinHeap) down(i int) {
 func Dijkstra_CheapestFlightWithinKStops(n int, flights [][]int, src, dst, k int) int {
 	/* Notes
 
-	Dijkstra's Algorithm is BFS with Priority Queue. In plain BFS we use a plain
-	Queue. Here we will be using a max/min heap to get the next nodes to travel
-	to.
+	Here we will be using Dijkstra's algorithm (BFS+PQ) to find the cheapest path
+	with K stops.
+
+	However, since this problem can have a longer path with cheaper cost, we
+	cannot rely on first found destination.
+
+	For this we will have to use The Principle Of Relaxing Edges.
+	This principle states that, if dist[v] gives the distance of v form the source
+	and a edge u->v exists with weigth wt, such that dist[v] > dist[u] + wt, then
+	we update the dist[v] = dist[u] + wt
+
+	In this problem statement, since we are limited to k stops, we will relax the
+	edge for node in that step.
+
+	Example: for node n, in x step - it contained a cost A; and we find another
+	direction to n in the same step with cost B, such that B < A, then we update
+	the dist[n] = B.
 	*/
 
-	const (
-		from_i = 0
-		to_i   = 1
-		cost_i = 2
-	)
+	// min heap for BFS+PQ
+	pq := make(MinHeap, 0)
 
-	var root_id big.Int
-	root_id.SetBit(&root_id, src, 1)
-	root := &Item{city: src, id: root_id}
-	srcHeap := &MinHeap{}
-	srcHeap.Push(root)
+	// memory for edge relaxation
+	dist := make([][]int, n)
+	dist_alt := make([][]int, n)
+	for i := range n {
+		// if k stops can be made, then k+1steps can be taken
+		dist[i] = make([]int, k+2)
+		dist_alt[i] = make([]int, k+2)
 
-	// convert flights array to map of:
-	//  { from_i: [[to_i, price_i], ...] }
-	dict := map[int][][]int{}
-	for _, flight := range flights {
-		data, ok := dict[flight[from_i]]
-		if !ok {
-			data = make([][]int, 0)
+		for j := range dist[i] {
+			dist[i][j] = math.MaxInt
+			dist_alt[i][j] = math.MaxInt
 		}
-
-		data = append(data, []int{flight[to_i], flight[cost_i]})
-		dict[flight[from_i]] = data
 	}
 
-	// to store the lowest travel cost
-	var marked *Item
+	// Set distance cost from source to source at 0th step as 0
+	dist[src][0] = 0
+	dist_alt[src][0] = 0
 
-	// a memory of previously traveled city
-	// { "srcID_dstID" : *Item }
-	memo := map[string]*Item{}
+	// push source to pq
+	pq.Push(&Item{
+		city:     int8(src),
+		depth:    0,
+		priority: 0,
+	})
 
-	for len(*srcHeap) > 0 {
-		sNode := srcHeap.Pop()
+	// move flights array to map
+	fMap := map[int8][][]int{}
+	for _, flight := range flights {
+		if _, ok := fMap[int8(flight[0])]; !ok {
+			fMap[int8(flight[0])] = make([][]int, 0)
+		}
+		fMap[int8(flight[0])] = append(fMap[int8(flight[0])], []int{flight[1], flight[2]})
+	}
+
+	// Perfrom Dijkstra's
+	for len(pq) > 0 {
+		// Pick node with lowest cost
+		sNode := pq.Pop()
 		if sNode == nil {
 			break
 		}
 
-		delete(memo, sNode.id.String())
-
-		// here we check for depth > k + 1.
-		// e.g.: k=1, depth=0,1,2 -> k+1 is valid (one stop at 1), depth=3 -> too may stops
-		if sNode.depth > k+1 {
-			// we ignore in this case and continue to the next
-			// we don't break cause the heap my have higher costs
-			// at lower depths that might still reach the dst
+		if sNode.depth == int8(k)+1 {
+			// max steps taken -> skip node
 			continue
 		}
 
-		if sNode.city == dst && (marked == nil || sNode.priority < marked.priority) {
-			marked = sNode
+		dist_v := dist[sNode.city][sNode.depth]
+		if dist_v != math.MaxInt && dist_v < sNode.priority {
+			// if this node was previously reached in the same number of steps at
+			// cheaper cost -> then ignore
 			continue
 		}
 
-		for _, flight := range dict[sNode.city] {
-			cost := flight[1] + sNode.priority
-			if marked != nil && marked.priority <= cost {
+		// Push valid next nodes
+		for _, flight := range fMap[sNode.city] {
+			nCity := int8(flight[0])
+			nDepth := sNode.depth + 1
+			nPriority := sNode.priority + flight[1]
+
+			if nDepth == int8(k)+1 && nCity != int8(dst) {
+				// we have reached max depth and not the destination -> skip
 				continue
 			}
 
-			var next_id big.Int
-			next_id.SetBit(&sNode.id, flight[0], 1)
+			// get the distance cost of next city from source city
+			dist_v := dist[nCity][nDepth]
 
-			next := &Item{
-				id:       next_id,
-				city:     flight[0],
-				depth:    sNode.depth + 1,
-				priority: cost,
-			}
-
-			if _, ok := memo[next.id.String()]; ok {
-				// we have already visited this. visiting again will be a waste of monies
+			if dist_v != math.MaxInt16 && dist_v < nPriority {
+				// this city has been visted from the source previously and the cost
+				// was cheaper -> we skip entering here
 				continue
 			}
 
-			srcHeap.Push(next)
-			memo[next.id.String()] = next
+			dist_alt[nCity][nDepth] = nPriority
+
+			pq.Push(&Item{
+				city:     nCity,
+				depth:    nDepth,
+				priority: nPriority,
+			})
+			continue
+		}
+
+		for i := range dist_alt {
+			copy(dist[i], dist_alt[i])
 		}
 	}
 
-	if marked == nil {
+	minCost := math.MaxInt
+	for _, cost := range dist[dst] {
+		if cost < minCost {
+			minCost = cost
+		}
+	}
+
+	if minCost == math.MaxInt {
 		return -1
 	}
-	return marked.priority
+	return minCost
 }
