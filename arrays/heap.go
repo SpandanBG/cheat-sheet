@@ -330,13 +330,59 @@ func QuickSelect_KthLargest(nums []int, k int) int {
 //	1 <= words.length <= 1000
 //	1 <= words[i].length <= 16
 //	words[i] only consists of lowercase English letters.
-func isPred(w1, w2 string) bool {
+func MinHeap_longestStrChain(words []string) int {
+	/* Notes
+
+	Here we will use 1DP solution:
+
+	First we will need the words in sorted order.
+	Then we create an array where we will store the max depth of the i'th word of
+	the words list -> say `dp`
+
+	We initialize the 0th of dp as 1 since the 1st will be the smalled word with
+	depth 1.
+
+	Now for every words after that, we will check with all words before that.
+	We then pluck the list of words that are its predecessors.
+
+	From them we take the largest depth as our target predecessor's depth and add
+	that and +1 as the depth of this word.
+
+	As we do this, we keep track of what was the max depth we found. This is the
+	answer we are looking for.
+	*/
+
+	sort.Slice(words, func(i, j int) bool {
+		return len(words[i]) < len(words[j])
+	})
+
+	sol := 1
+	dp := make([]int, len(words))
+	dp[0] = 1
+
+	for i := 1; i < len(words); i++ {
+		best := 0
+
+		for j := 0; j <= i; j++ {
+			if isPredecessor(words[j], words[i]) && dp[j] > best {
+				best = dp[j]
+			}
+		}
+
+		dp[i] = best + 1
+		sol = max(dp[i], sol)
+	}
+
+	return sol
+}
+
+func isPredecessor(w1, w2 string) bool {
 	if len(w1) >= len(w2) || len(w2)-len(w1) != 1 {
 		return false
 	}
 
-	i, j := 0, 0
-	for i < len(w1) {
+	i, j, n := 0, 0, len(w1)
+	for i < n {
 		if w1[i] != w2[j] {
 			j++
 			break
@@ -345,7 +391,7 @@ func isPred(w1, w2 string) bool {
 		j++
 	}
 
-	for i < len(w1) {
+	for i < n {
 		if w1[i] != w2[j] {
 			return false
 		}
@@ -354,75 +400,4 @@ func isPred(w1, w2 string) bool {
 	}
 
 	return true
-}
-
-func MinHeap_longestStrChain(words []string) int {
-	/* Notes
-
-	Here the idea is to do the following:
-
-	We maintian a depth matrix, with the first word at the 0th index of the matix:
-	[
-		[word_1]
-	]
-
-	Then we have to start with the highest depth of the matrix (len(matrix))
-	With the next work picked for assessment -> say word_y, we go through the list
-	of words at the selected depth (len(matrix)-1 at the beginning).
-
-	One of 3 things can happen now:
-		- It is a predecessor: save it in the next depth
-		- It didn't match: move depth 1 step (depth - 1)
-		- It didn't match any and reached depth = 0: insert word_y at depth
-
-	The answer is len(matrix)
-	*/
-
-	if len(words) <= 1 {
-		return len(words)
-	}
-
-	sort.Slice(words, func(i, j int) bool {
-		return len(words[i]) < len(words[j])
-	})
-
-	depth := 0
-	memo := [][]int{{0}}
-
-	for i := 1; i < len(words); i++ {
-		next := words[i]
-
-		exit_back := false
-		for d := depth; d >= 0; d-- {
-
-			for _, j := range memo[d] {
-				if isPred(words[j], next) {
-					nextDepth := d + 1
-					if nextDepth < len(memo) {
-						memo[nextDepth] = append(memo[nextDepth], i)
-					} else {
-						memo = append(memo, make([]int, 0))
-						memo[nextDepth] = []int{i}
-					}
-
-					if nextDepth > depth {
-						depth = nextDepth
-					}
-
-					exit_back = true
-					break
-				}
-			}
-
-			if exit_back {
-				break
-			}
-		}
-
-		if !exit_back {
-			memo[0] = append(memo[0], i)
-		}
-	}
-
-	return depth + 1
 }
