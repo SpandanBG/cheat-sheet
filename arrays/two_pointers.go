@@ -157,3 +157,100 @@ func TwoPointers_TwoSequenceComparing(a, b string) bool {
 
 	return true
 }
+
+// Given n non-negative integers representing an elevation map where the width
+// of each bar is 1, compute how much water it can trap after raining.
+//
+// Example: 1
+// Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+// Output: 6
+// Explanation: The above elevation map (black section) is represented by array
+// [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section)
+// are being trapped.
+//
+// Constraints:
+//
+//	n == height.length
+//	1 <= n <= 2 * 104
+//	0 <= height[i] <= 105
+func TwoPointers_trap(height []int) int {
+	/* Note:
+
+	This problem can be solved by jumping between prefix and suffix look up.
+
+	1. Trim off the edges of the array to remove all hights that do not lead into
+	smaller hight. E.G.: [0,2,1,2,3,1] => [2,1,2,3] since [0,2] are increasing and
+	[3,1] are decreasing left and right edges respectively.
+
+	2. If Left height < Right height; we start collecting water till we reach a
+	height greater or equal to the left height. We send the remaining height back
+	again to be collected
+
+	3. If Left height >= Right height; we start collectin from the RIGHT till we
+	reach a hight greater or equal to the right and send remaining heights back
+	again to be collected
+	*/
+
+	if len(height) <= 1 {
+		return 0
+	}
+
+	// shrink left corner to suitable size
+	i, j := 0, 1
+	for j < len(height) && height[i] <= height[j] {
+		i = j
+		j += 1
+	}
+
+	//shrink right corner to suitable size
+	l := len(height) - 1
+	k := l - 1
+	for k >= 0 && height[k] >= height[l] {
+		l = k
+		k -= 1
+	}
+
+	// we have completely removed all possible captures
+	if k <= i {
+		return 0
+	}
+
+	height = height[i : l+1]
+
+	if len(height) < 3 {
+		// no water can be saved with just 2 towers
+		return 0
+	}
+
+	// --------------------
+
+	i, j = 0, len(height)-1
+
+	// if right edge is smaller than left
+	// then we collect water from the right side till we reach equal or greater
+	// height, and send the rest to be trapped again to the function
+	if height[i] > height[j] {
+		collect := 0
+
+		for m := j - 1; i < m; m -= 1 {
+			if height[m] >= height[j] {
+				return ((j-m-1)*height[j] - collect) + TwoPointers_trap(height[:m+1])
+			}
+			collect += height[m]
+		}
+
+		return (j-i-1)*height[j] - collect
+	}
+
+	// otherwise - we collect from the left till we reach equal or greater height
+	// and send the rest to be trapped again to the function
+	collect := 0
+	for m := i + 1; m < j; m += 1 {
+		if height[m] >= height[i] {
+			return ((m-i-1)*height[i] - collect) + TwoPointers_trap(height[m:])
+		}
+		collect += height[m]
+	}
+
+	return (j-i-1)*height[i] - collect
+}

@@ -43,6 +43,11 @@ func main() {
 			inp: "a#b#c#d##e#f", "##f"`)
 	fmt.Println("\t\tOutput: ", arrays.TwoPointers_TwoSequenceComparing("a#b#c#d##e#f", "##f"))
 
+	fmt.Println(`
+		(d) Trapping Rain Water
+		Input: height = [ 5,4,1,2 ]`)
+	fmt.Println("\t\tOutput:", arrays.TwoPointers_trap([]int{5, 4, 1, 2}))
+
 	fmt.Print("\n\t2.Sliding-Window")
 	fmt.Println(`
 		(a) Size of largest substring of non-repeating characters
