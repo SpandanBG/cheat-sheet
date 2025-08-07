@@ -123,6 +123,13 @@ func main() {
 		arrays.QuickSelect_KthLargest([]int{3, 2, 1, 5, 6, 4}, 2),
 	)
 
+	fmt.Println("\n\t\t(e) Longest String Chain")
+	fmt.Println(
+		"\t\tInputs: nums=['a','b','ba','bca','bda','bdca']",
+		"\n\t\tOutput:",
+		arrays.MinHeap_longestStrChain([]string{"a", "b", "ba", "bca", "bda", "bdca"}),
+	)
+
 	fmt.Println("--------------------------------------------------------------")
 
 	fmt.Println("Graphs")

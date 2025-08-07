@@ -1,6 +1,9 @@
 package arrays
 
-import "container/heap"
+import (
+	"container/heap"
+	"sort"
+)
 
 type Item struct {
 	value int
@@ -293,4 +296,133 @@ func QuickSelect_KthLargest(nums []int, k int) int {
 	}
 
 	return QuickSelect_KthLargest(rhs, k)
+}
+
+// You are given an array of words where each word consists of lowercase English
+// letters.
+//
+// wordA is a predecessor of wordB if and only if we can insert exactly one letter
+// anywhere in wordA without changing the order of the other characters to make
+// it equal to wordB.
+//
+// For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor
+// of "bcad".
+// A word chain is a sequence of words [word1, word2, ..., wordk] with k >= 1,
+// where word1 is a predecessor of word2, word2 is a predecessor of word3, and
+// so on. A single word is trivially a word chain with k == 1.
+//
+// For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor
+// of "bcad".
+//
+// For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor
+// of "bcad".
+//
+// Example 1:
+//
+//	For example, "abc" is a predecessor of "abac", while "cba" is not a predecessor
+//	of "bcad".
+//	Input: words = ["a","b","ba","bca","bda","bdca"]
+//	Output: 4
+//	Explanation: One of the longest word chains is ["a","ba","bda","bdca"].
+//
+// Constraints:
+//
+//	1 <= words.length <= 1000
+//	1 <= words[i].length <= 16
+//	words[i] only consists of lowercase English letters.
+func isPred(w1, w2 string) bool {
+	if len(w1) >= len(w2) || len(w2)-len(w1) != 1 {
+		return false
+	}
+
+	i, j := 0, 0
+	for i < len(w1) {
+		if w1[i] != w2[j] {
+			j++
+			break
+		}
+		i++
+		j++
+	}
+
+	for i < len(w1) {
+		if w1[i] != w2[j] {
+			return false
+		}
+		i++
+		j++
+	}
+
+	return true
+}
+
+func MinHeap_longestStrChain(words []string) int {
+	/* Notes
+
+	Here the idea is to do the following:
+
+	We maintian a depth matrix, with the first word at the 0th index of the matix:
+	[
+		[word_1]
+	]
+
+	Then we have to start with the highest depth of the matrix (len(matrix))
+	With the next work picked for assessment -> say word_y, we go through the list
+	of words at the selected depth (len(matrix)-1 at the beginning).
+
+	One of 3 things can happen now:
+		- It is a predecessor: save it in the next depth
+		- It didn't match: move depth 1 step (depth - 1)
+		- It didn't match any and reached depth = 0: insert word_y at depth
+
+	The answer is len(matrix)
+	*/
+
+	if len(words) <= 1 {
+		return len(words)
+	}
+
+	sort.Slice(words, func(i, j int) bool {
+		return len(words[i]) < len(words[j])
+	})
+
+	depth := 0
+	memo := [][]int{{0}}
+
+	for i := 1; i < len(words); i++ {
+		next := words[i]
+
+		exit_back := false
+		for d := depth; d >= 0; d-- {
+
+			for _, j := range memo[d] {
+				if isPred(words[j], next) {
+					nextDepth := d + 1
+					if nextDepth < len(memo) {
+						memo[nextDepth] = append(memo[nextDepth], i)
+					} else {
+						memo = append(memo, make([]int, 0))
+						memo[nextDepth] = []int{i}
+					}
+
+					if nextDepth > depth {
+						depth = nextDepth
+					}
+
+					exit_back = true
+					break
+				}
+			}
+
+			if exit_back {
+				break
+			}
+		}
+
+		if !exit_back {
+			memo[0] = append(memo[0], i)
+		}
+	}
+
+	return depth + 1
 }
