@@ -184,4 +184,5 @@ func main() {
 		Input: graph = [[4,3,1],[3,2,4],[],[4],[]]`)
 	fmt.Println("\t\tOutput:", graphs.DSF_allPathsSourceTarget([][]int{{4, 3, 1}, {3, 2, 4}, {}, {4}, {}}))
 
+	fmt.Println(arrays.DP_coinChange([]int{186,419,83,408}, 6249))
 }

@@ -2,6 +2,7 @@ package arrays
 
 import (
 	"errors"
+	"math"
 )
 
 // TwoPointers_KSum_SortedArray - Takes in a sorted array and finds 2 indices in
@@ -253,4 +254,35 @@ func TwoPointers_trap(height []int) int {
 	}
 
 	return (j-i-1)*height[i] - collect
+}
+
+func DP_coinChange(coins []int, amount int) int {
+	return walk(coins, amount, map[int]int{0:0})
+}
+
+func walk(coins[]int, amount int, memo map[int]int) int {
+	if v, ok := memo[amount]; ok {
+		return v
+	}
+
+	minTake := math.MaxInt
+	for _, c := range coins {
+		if c > amount {
+			continue
+		}
+
+		take := walk(coins, amount-c, memo)
+		if take == -1 {
+			continue
+		}
+
+		minTake = min(minTake, 1+take)
+	}
+
+	if minTake == math.MaxInt {
+		memo[amount] = -1
+		return -1
+	}
+	memo[amount] = minTake
+	return minTake
 }
