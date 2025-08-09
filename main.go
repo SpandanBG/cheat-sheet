@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"sudocoding.xyz/cheat-sheet/arrays"
+	"sudocoding.xyz/cheat-sheet/dp"
 	"sudocoding.xyz/cheat-sheet/graphs"
 )
 
@@ -184,5 +185,14 @@ func main() {
 		Input: graph = [[4,3,1],[3,2,4],[],[4],[]]`)
 	fmt.Println("\t\tOutput:", graphs.DSF_allPathsSourceTarget([][]int{{4, 3, 1}, {3, 2, 4}, {}, {4}, {}}))
 
-	fmt.Println(arrays.DP_coinChange([]int{186,419,83,408}, 6249))
+	fmt.Println("--------------------------------------------------------------")
+
+	fmt.Println("Dynamic Programming")
+	fmt.Println("----------------")
+
+	fmt.Print("\n\t1. 1-Dimentional")
+	fmt.Println(`
+		(a) Coin Changes
+		Input: coins=[186,419,83,408], amount=6249`)
+	fmt.Println("\t\tOutput:", dp.DP_coinChange([]int{186, 419, 83, 408}, 6249))
 }
